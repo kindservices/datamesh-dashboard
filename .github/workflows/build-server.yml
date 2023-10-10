@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   build-and-push:
@@ -35,10 +36,11 @@ jobs:
         export BUILD_NUMBER=${{github.run_number}}
         make build
 
-    - name: Build and push Docker image
+    - name: Push Docker image
       working-directory: ./server
       run: |
         export BUILD_NUMBER=${{github.run_number}}
-        make pushOnly
+        make clean
+        make push
     - name: Logout from Docker Hub
       run: docker logout
