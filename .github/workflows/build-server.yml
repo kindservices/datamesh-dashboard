@@ -1,0 +1,44 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to Docker Hub
+      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - uses: coursier/cache-action@v6.3
+    - uses: VirtusLab/scala-cli-setup@v0.1
+    - name: Scalafmt check
+      working-directory: ./server
+      run: |
+        scala-cli fmt --check . || (
+          echo "To format code run"
+          echo "  scala-cli fmt ."
+          exit 1
+        )
+    - name: Build
+      working-directory: ./server
+      run: | 
+        export BUILD_NUMBER=${{github.run_number}}
+        make build
+
+    - name: Build and push Docker image
+      working-directory: ./server
+      run: |
+        export BUILD_NUMBER=${{github.run_number}}
+        make pushOnly
+    - name: Logout from Docker Hub
+      run: docker logout
