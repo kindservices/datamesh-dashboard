@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-bff-deployment
+  namespace: mfe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard-bff
+  template:
+    metadata:
+      labels:
+        app: dashboard-bff
+    spec:
+      containers:
+      - name: dashboard-bff
+        image: kindservices/dashboard-bff:0.0.1
+        imagePullPolicy: Always
+        env:
+          - name: HOSTPORT
+            value: http://service-registry-service.mfe:8080
+        ports:
+        - containerPort: 8081
+        readinessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8081
+            scheme: HTTP
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-bff-service
+  namespace: mfe
+spec:
+  type: LoadBalancer
+  sessionAffinity: None
+  selector:
+    app: dashboard-bff
+  ports:
+  - name : default
+    port: 8080
+    targetPort: 8081
