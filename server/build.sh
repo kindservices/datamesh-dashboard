@@ -17,7 +17,7 @@ echo "        NAME : $NAME"
 build() {
     docker buildx create --use
     docker buildx inspect
-    docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.local -t $IMG -t $NAME:latest .
+    docker buildx build -o type=docker --platform linux/amd64,linux/arm64 -f Dockerfile.local -t $IMG -t $NAME:latest .
 }
 
 clean() {
@@ -27,7 +27,7 @@ clean() {
 buildInDocker() {
     docker buildx create --use
     docker buildx inspect
-    docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.inDocker -t $IMG -t $NAME:latest .
+    docker buildx build -o type=docker --platform linux/amd64,linux/arm64 -f Dockerfile.inDocker -t $IMG -t $NAME:latest .
 }
 
 buildLocally() {
