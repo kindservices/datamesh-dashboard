@@ -32,6 +32,10 @@ buildLocally() {
 
 push() {
     set +x
+    echo "listing"
+    docker image ls
+    echo "inspecting $NAME:latest"
+    docker image inspect $NAME
     echo "pushing  $NAME:latest"
     docker push $NAME:latest
     echo "pushing  $NAME:$TAG"
