@@ -34,6 +34,8 @@ jobs:
         export BUILD_NUMBER=${{github.run_number}}
         make build
 
+        docker use --load
+        
         echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin 
 
         make push
