@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
-export TAG=${TAG:-0.0.1}
-export IMG=${IMG:-kindservices/dashboard-web:$TAG}
+export BUILD_NUMBER=${BUILD_NUMBER:-local}
+export MAJOR_MINOR=${MAJOR_MINOR:-0.0}
+export TAG="${MAJOR_MINOR}.${BUILD_NUMBER}"
+export NAME="kindservices/datamesh-dashboard-web"
+export IMG=${IMG:-$NAME:$TAG}
 export PORT=${PORT:-3000}
 
 buildDocker() {
-    docker build --tag $IMG .
+    docker buildx build --platform linux/amd64,linux/arm64 --tag $IMG .
 }
 
 push() {
-    docker push $IMG
+    docker push $NAME:latest
+    docker push $NAME:$TAG
 }
 
 runLocal() {
@@ -34,12 +38,12 @@ installArgo() {
     BRANCH=${BRANCH:-`git rev-parse --abbrev-ref HEAD`}
 
     echo "creating $APP in branch $BRANCH"
-    
+
     argocd app create $APP \
-    --repo https://github.com/aaronp/mfe.git \
-    --path dashboard/web/k8s \
+    --repo https://github.com/kindservices/idealab-dashboard.git \
+    --path web/k8s \
     --dest-server https://kubernetes.default.svc \
-    --dest-namespace mfe \
+    --dest-namespace data-mesh \
     --sync-policy automated \
     --auto-prune \
     --self-heal \

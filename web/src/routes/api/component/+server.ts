@@ -1,6 +1,6 @@
 import { json, type RequestHandler } from '@sveltejs/kit'
 
-const dashboardHost = "http://dashboard-bff-service.mfe:8080";
+const dashboardHost = "http://dashboard-bff-service.data-mesh:8080";
 
 export const GET: RequestHandler = async (event) => {
 

@@ -6,3 +6,4 @@
 .scala-build
 *.jar
 server/kill.sh
+.idea
