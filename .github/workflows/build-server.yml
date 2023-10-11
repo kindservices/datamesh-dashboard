@@ -40,7 +40,10 @@ jobs:
       working-directory: ./server
       run: |
         export BUILD_NUMBER=${{github.run_number}}
+        echo "cleaning..."
         make clean
+        echo "cleaned "
+        ls -Alrth
         make push
     - name: Logout from Docker Hub
       run: docker logout
