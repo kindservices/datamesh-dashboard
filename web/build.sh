@@ -39,6 +39,8 @@ installArgo() {
 
     echo "creating $APP in branch $BRANCH"
 
+    kubectl create namespace data-mesh || echo "couldn't create data-mesh namespace"
+
     argocd app create $APP \
     --repo https://github.com/kindservices/idealab-dashboard.git \
     --path web/k8s \
