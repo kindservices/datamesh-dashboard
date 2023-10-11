@@ -33,19 +33,8 @@ jobs:
         export BUILD_NUMBER=${{github.run_number}}
         make build
 
-    - name: Push Docker image
-      working-directory: ./server
-      run: |
-        set +x
-        export BUILD_NUMBER=${{github.run_number}}
-        echo "using DOCKERHUB_USERNAME ${{ secrets.DOCKERHUB_USERNAME }}"
-        echo "${{ secrets.DOCKERHUB_USERNAME }}" > debug.txt
-        ls -Alrth
-        cat debug.txt
         echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin 
 
-        echo "logged in..."
-        cat /home/runner/.docker/config.json
         make push
     - name: Logout from Docker Hub
       run: docker logout
