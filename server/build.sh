@@ -41,6 +41,7 @@ push() {
     echo "pushing  $NAME:$TAG"
     docker push $NAME:$TAG
 }
+
 run() {
     echo "docker run -it --rm -p $PORT:$PORT -d $IMG"
     id=`docker run -it --rm -p $PORT:$PORT -d $IMG`
