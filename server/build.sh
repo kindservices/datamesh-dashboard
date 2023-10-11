@@ -55,10 +55,10 @@ installArgo() {
     echo "creating $APP to point at $BRANCH"
     
     argocd app create $APP \
-    --repo https://github.com/aaronp/mfe.git \
-    --path dashboard/server/k8s \
+    --repo https://github.com/kindservices/idealab-dashboard.git \
+    --path server/k8s \
     --dest-server https://kubernetes.default.svc \
-    --dest-namespace mfe \
+    --dest-namespace data-mesh \
     --sync-policy automated \
     --auto-prune \
     --self-heal \
