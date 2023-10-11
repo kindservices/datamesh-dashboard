@@ -36,8 +36,8 @@ jobs:
     - name: Push Docker image
       working-directory: ./server
       run: |
+        set +x
         export BUILD_NUMBER=${{github.run_number}}
-        which trap
         echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin 
         make push
     - name: Logout from Docker Hub
