@@ -31,7 +31,10 @@ buildLocally() {
 }
 
 push() {
+    set +x
+    echo "pushing  $NAME:latest"
     docker push $NAME:latest
+    echo "pushing  $NAME:$TAG"
     docker push $NAME:$TAG
 }
 run() {
