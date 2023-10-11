@@ -38,6 +38,7 @@ jobs:
       run: |
         set +x
         export BUILD_NUMBER=${{github.run_number}}
+        echo "using DOCKERHUB_USERNAME ${{ secrets.DOCKERHUB_USERNAME }}"
         echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin 
         make push
     - name: Logout from Docker Hub
