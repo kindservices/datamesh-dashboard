@@ -1,6 +1,6 @@
-//> using scala "3.2.2"
+//> using scala "3.3.1"
 //> using lib "com.lihaoyi::requests:0.8.0"
-//> using lib "com.lihaoyi::cask:0.9.0"
+//> using lib "com.lihaoyi::cask:0.9.1"
 //> using lib "com.lihaoyi::upickle:3.0.0"
 
 import cask.model.Response

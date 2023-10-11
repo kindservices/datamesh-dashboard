@@ -2,7 +2,7 @@
 export BUILD_NUMBER=${BUILD_NUMBER:-local}
 export MAJOR_MINOR=${MAJOR_MINOR:-0.0}
 export TAG="${MAJOR_MINOR}.${BUILD_NUMBER}"
-export NAME="kindservices/dashboard-bff"
+export NAME="kindservices/datamesh-dashboard-bff"
 export IMG=${IMG:-$NAME:$TAG}
 export PORT=${PORT:-8081}
 
@@ -15,7 +15,9 @@ echo "        NAME : $NAME"
 # pushd $DIR
 
 build() {
-    docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.local --tag $IMG .
+    docker buildx create --use
+    docker buildx inspect
+    docker buildx build -o type=docker --platform linux/amd64,linux/arm64 -f Dockerfile.local -t $IMG -t $NAME:latest .
 }
 
 clean() {
@@ -23,17 +25,28 @@ clean() {
 }
 
 buildInDocker() {
-    docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.inDocker --tag $IMG .
+    docker buildx create --use
+    docker buildx inspect
+    docker buildx build -o type=docker --platform linux/amd64,linux/arm64 -f Dockerfile.inDocker -t $IMG -t $NAME:latest .
 }
 
 buildLocally() {
-    scala-cli --power package App.scala -o app.jar --assembly
+    scala-cli --power package App.scala -o app.jar --force --assembly
 }
 
 push() {
-    docker push $NAME:latest
+    set +x
+    
+    echo "images:"
+    docker image ls
+
+    echo "pushing  $NAME:$TAG"
     docker push $NAME:$TAG
+    
+    echo "pushing  $NAME:latest"
+    docker push $NAME:latest
 }
+
 run() {
     echo "docker run -it --rm -p $PORT:$PORT -d $IMG"
     id=`docker run -it --rm -p $PORT:$PORT -d $IMG`
@@ -55,10 +68,10 @@ installArgo() {
     echo "creating $APP to point at $BRANCH"
     
     argocd app create $APP \
-    --repo https://github.com/aaronp/mfe.git \
-    --path dashboard/server/k8s \
+    --repo https://github.com/kindservices/idealab-dashboard.git \
+    --path server/k8s \
     --dest-server https://kubernetes.default.svc \
-    --dest-namespace mfe \
+    --dest-namespace data-mesh \
     --sync-policy automated \
     --auto-prune \
     --self-heal \
