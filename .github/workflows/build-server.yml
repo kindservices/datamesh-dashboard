@@ -39,7 +39,7 @@ jobs:
         set +x
         export BUILD_NUMBER=${{github.run_number}}
         echo "using DOCKERHUB_USERNAME ${{ secrets.DOCKERHUB_USERNAME }}"
-        echo ${{ secrets.DOCKERHUB_USERNAME }}" > debug.txt
+        echo "${{ secrets.DOCKERHUB_USERNAME }}" > debug.txt
         ls -Alrth
         cat debug.txt
         echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin 

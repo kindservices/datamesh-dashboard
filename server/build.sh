@@ -32,7 +32,7 @@ buildLocally() {
 
 push() {
     set +x
-    echo "listing"
+    
     docker image ls
     echo "inspecting $NAME:latest"
     docker image inspect $NAME
