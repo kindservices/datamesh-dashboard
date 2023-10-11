@@ -2,7 +2,7 @@
 export BUILD_NUMBER=${BUILD_NUMBER:-local}
 export MAJOR_MINOR=${MAJOR_MINOR:-0.0}
 export TAG="${MAJOR_MINOR}.${BUILD_NUMBER}"
-export NAME="kindservices/dashboard-web"
+export NAME="kindservices/datamesh-dashboard-web"
 export IMG=${IMG:-$NAME:$TAG}
 export PORT=${PORT:-3000}
 
