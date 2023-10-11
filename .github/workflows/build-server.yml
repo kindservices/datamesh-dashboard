@@ -30,6 +30,7 @@ jobs:
     - name: Build
       working-directory: ./server
       run: | 
+      
         export BUILD_NUMBER=${{github.run_number}}
         make build
 

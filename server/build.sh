@@ -15,7 +15,9 @@ echo "        NAME : $NAME"
 # pushd $DIR
 
 build() {
-    docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.local --tag $IMG .
+    docker buildx create --use
+    docker buildx inspect
+    docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.local -t $IMG -t $NAME:latest .
 }
 
 clean() {
@@ -23,7 +25,9 @@ clean() {
 }
 
 buildInDocker() {
-    docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.inDocker --tag $IMG .
+    docker buildx create --use
+    docker buildx inspect
+    docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.inDocker -t $IMG -t $NAME:latest .
 }
 
 buildLocally() {
@@ -38,8 +42,6 @@ push() {
 
     echo "pushing  $NAME:$TAG"
     docker push $NAME:$TAG
-    
-    docker tag $NAME:$TAG $NAME:latest
     
     echo "pushing  $NAME:latest"
     docker push $NAME:latest
