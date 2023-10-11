@@ -27,7 +27,7 @@ buildInDocker() {
 }
 
 buildLocally() {
-    scala-cli --power package App.scala -o app.jar --assembly
+    scala-cli --power package App.scala -o app.jar --force --assembly
 }
 
 push() {
