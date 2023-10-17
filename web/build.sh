@@ -42,7 +42,7 @@ installArgo() {
     kubectl create namespace data-mesh || echo "couldn't create data-mesh namespace"
 
     argocd app create $APP \
-    --repo https://github.com/kindservices/idealab-dashboard.git \
+    --repo https://github.com/kindservices/datamesh-dashboard.git \
     --path web/k8s \
     --dest-server https://kubernetes.default.svc \
     --dest-namespace data-mesh \
