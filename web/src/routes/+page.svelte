@@ -1,7 +1,7 @@
 <script lang="typescript">
     import { onMount } from "svelte";
     import { apiData, values } from './store.js';
-    import { dynamicLoad } from './dynamicload.js';
+    import { dynamicLoad } from './dynamicload.ts';
     
 
     let container;
@@ -12,6 +12,7 @@
       fetch(url("/api/component"))
       .then(response => { return response.json(); })
       .then(data => {
+        console.log(`bff call to /api/component returned >${data}<`);
         apiData.set(data);
       }).catch(error => {
         console.log(`error fetching ${url("/api/component")}: ${error}`);
@@ -24,6 +25,7 @@
       const json = await fetch(url(`/api/component/${id}`)).then(data => {
         return data.json();
       });
+      console.log(`fetched ${id} returned ${json}`);
       return json.service.webComponent.componentId;
     }
 
@@ -32,7 +34,7 @@
 
       const componentHtml = await fetchComponent(id);
 
-      dynamicLoad(url(`/api/component/${id}/bundle.js`), url(`/api/component/${id}/bundle.css`));
+      dynamicLoad(url(`/api/component/${id}/bundle.js`), url(`/api/component/${id}/bundle.css`), document.head);
 
       const child = document.createElement('span');
       container.innerHTML = componentHtml;

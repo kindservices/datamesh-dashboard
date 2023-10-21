@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: dashboard
-        image: kindservices/datamesh-dashboard-web:latest
+        image: kindservices/datamesh-dashboard-web:build-45
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

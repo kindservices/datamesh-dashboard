@@ -10,6 +10,32 @@ import util.control.NonFatal
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import scala.concurrent.ExecutionContext
 
+// format: off
+/**
+  * This "backend for front-end" is the caching layer between our dashboard and the service registry.
+  * 
+  * It periodically refreshed its state
+  *
+  * GET /component 
+  * 
+  * returns:
+
+  [
+    {
+        "id": "testOne",
+        "label": "some friendly label",
+        "secondsSinceLastHeartbeat": 1174,
+        "isStale": true
+    },
+    {
+        "id": "testHeartbeat",
+        "label": "some friendly label",
+        "secondsSinceLastHeartbeat": 1097,
+        "isStale": true
+    }
+]
+  */
+// format: on
 def env(key: String, default: String = null) =
   def bang = sys.error(
     s"$key env variable not set: ${sys.env.mkString("\n", "\n", "\n")}\n properties:\n ${sys.props.mkString("\n")}"
@@ -73,9 +99,9 @@ object model {
 import serviceregistry.{*, given}
 
 object conf {
-  def hostPort: String = env("HOSTPORT", "http://localhost:8080")
+  private def registryHostPort: String = env("REGISTRY_HOSTPORT", "http://localhost:8080")
 
-  def listUrl = s"${hostPort}/api/v1/registry"
+  def listUrl = s"${registryHostPort}/api/v1/registry"
 }
 
 def fetch(url: String) = {

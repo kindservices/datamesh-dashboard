@@ -1,4 +1,4 @@
-export function dynamicLoad(jsUrl, cssUrl) {
+export function dynamicLoad(jsUrl, cssUrl, container) {
     var script = document.createElement('script');
     script.src = jsUrl;
 
@@ -6,6 +6,7 @@ export function dynamicLoad(jsUrl, cssUrl) {
     css.rel = "stylesheet";
     css.href = cssUrl;
 
-    document.head.appendChild(script);
-    document.head.appendChild(css);
+    container.appendChild(script);
+    container.appendChild(css);
 }
+

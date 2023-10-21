@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
       - name: dashboard-bff
-        image: kindservices/datamesh-dashboard-bff:latest
+        image: kindservices/datamesh-dashboard-bff:build-45
         imagePullPolicy: Always
         env:
-          - name: HOSTPORT
+          - name: REGISTRY_HOSTPORT
             value: http://service-registry-service.data-mesh:8080
         ports:
         - containerPort: 8081

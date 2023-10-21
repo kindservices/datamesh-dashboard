@@ -1,5 +1,5 @@
-run: build
-	. ./build.sh && run
+run:
+	scala-cli App.scala 
 build: buildLocally
 	. ./build.sh && build
 buildLocally: clean
