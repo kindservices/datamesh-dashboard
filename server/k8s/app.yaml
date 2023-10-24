@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: dashboard-bff
-        image: kindservices/datamesh-dashboard-bff:build-45
+        image: kindservices/datamesh-dashboard-bff:latest
         imagePullPolicy: Always
         env:
           - name: REGISTRY_HOSTPORT
