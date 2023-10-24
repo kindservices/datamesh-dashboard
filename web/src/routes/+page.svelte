@@ -1,88 +1,131 @@
-<script lang="typescript">
-    import { onMount } from "svelte";
-    import { apiData, values } from './store.js';
-    import { dynamicLoad } from './dynamicload.js';
-    
+<script lang="ts">
+  import { ComponentContainer, ComponentItemConfig, GoldenLayout, ItemType, LayoutConfig } from 'golden-layout';
+  import { onMount } from "svelte";
+  import WidgetPicker from './WidgetPicker.svelte';
 
-    let container;
-    const url = (path) => new URL(path, `http://${window.location.host}`);
+  let goldenLayout;
 
+
+    const myLayout: LayoutConfig = {
+      root: {
+        type: 'row',
+        content: [
+          {
+            title: 'New Component',
+            type: 'component',
+            componentType: 'NewComponent'
+          }
+        ]
+      }
+    };
 
     onMount(async () => {
-      fetch(url("/api/component"))
-      .then(response => { return response.json(); })
-      .then(data => {
-        apiData.set(data);
-      }).catch(error => {
-        console.log(`error fetching ${url("/api/component")}: ${error}`);
-        return [];
-      });
+
+      const menuContainerElement = document.querySelector('#menuContainer');
+      const layoutElement = document.querySelector('#layoutContainer');
+
+      goldenLayout = new GoldenLayout(layoutElement);
+
+
+      goldenLayout.loadLayout(myLayout);
+
     });
-
-
-    const fetchComponent = async (id) => {
-      const json = await fetch(url(`/api/component/${id}`)).then(data => {
-        return data.json();
-      });
-      return json.service.webComponent.componentId;
-    }
-
-    const addComponent = async (comp) => {
-      const id = comp.id;
-
-      const componentHtml = await fetchComponent(id);
-
-      dynamicLoad(url(`/api/component/${id}/bundle.js`), url(`/api/component/${id}/bundle.css`));
-
-      const child = document.createElement('span');
-      container.innerHTML = componentHtml;
-    }
 
 </script>
 
-<main>
-  <div id="page-container">
-    
-    {#if values.length == 1}<h1>One Service</h1>{:else}<h1>{$values.length} Services</h1>{/if}
-    
-    <ul>
-    {#each $values as i}
-        <li><div>
-          {#if i.isStale}
-          <s>{i.label}</s><span class="stale">(last update was ({i.secondsSinceLastHeartbeat}) seconds ago)</span>
-          {:else}
-            <a href="#" on:click={addComponent(i)}>{i.label}</a>
-          {/if}
-          </div>
-        </li>
-    {/each}
+<div class="container">
+  <div class="header">
+    <ul id="menuContainer">
+      {#if goldenLayout}
+        <li><WidgetPicker {goldenLayout} /></li>
+      {/if}
     </ul>
-
-    <div bind:this={container}/>
-
-    <footer id="footer">
-      <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-    </footer>
   </div>
-</main>
+  <div class="body">
+    <div id="layoutContainer"></div>
+  </div>
+  <div class="footer">Footer content</div>
+</div>
+
 
 <style>
-#page-container {
-  position: relative;
-  min-height: 100vh;
+@import "https://golden-layout.com/files/latest/css/goldenlayout-base.css";
+@import "https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css";
+
+:global(body) {
+  margin: 0;
+  padding: 0;
 }
 
-#content-wrap {
-  padding-bottom: 2.5rem;    /* Footer height */
+*{
+  margin: 0;
+  padding: 0;
+  list-style-type:none;
 }
 
-.stale {
-  color :red
+.container {
+  margin: 0;
+  padding: 0;
+  background-color: grey;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 100% of the viewport height */
+  width: 100vw; /* 100% of the viewport height */
 }
-#footer {
-  position: absolute;
-  bottom: 0;
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+li {
+  margin-right: 10px;
+}
+
+
+.header {
+  height: 30px; /* Fixed height for the header */
+  flex: 0 0 auto; /* Do not grow or shrink, and take the specified height */
+}
+
+.body {
+  flex: 1; /* Allow the middle content to grow and fill the remaining space */
+  overflow: auto; /* Add overflow behavior if content exceeds available space */
+}
+
+.footer {
+  height: 30px; /* Fixed height for the footer */
+  flex: 0 0 auto; /* Do not grow or shrink, and take the specified height */
+}
+
+
+#menuContainer{
+  flex: 0 0 auto;
+  margin-right: 3px;
+}
+
+#menuContainer li{
+  border-bottom: 1px solid #000;
+  border-top: 1px solid #333;
+  cursor: pointer;
+  padding: 2px 20px;
+  color: #BBB;
+  background: #1a1a1a;
+  font: 12px Arial, sans-serif;
+}
+
+#menuContainer li:hover{
+  background: #111;
+  color: #CCC;
+}
+
+#layoutContainer {
+  flex: 1 1 auto;
+  height: 100%;
   width: 100%;
-  height: 6.5rem;            /* Footer height */
+  color: white;
+  border: blue solid 2;
 }
-</style>
+    </style>

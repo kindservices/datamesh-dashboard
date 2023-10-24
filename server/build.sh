@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 export BUILD_NUMBER=${BUILD_NUMBER:-local}
-export MAJOR_MINOR=${MAJOR_MINOR:-0.0}
-export TAG="${MAJOR_MINOR}.${BUILD_NUMBER}"
 export NAME="kindservices/datamesh-dashboard-bff"
-export IMG=${IMG:-$NAME:$TAG}
+export IMG=${IMG:-$NAME:$BUILD_NUMBER}
 export PORT=${PORT:-8081}
 
 
 echo "BUILD_NUMBER : $BUILD_NUMBER"
-echo "         TAG : $TAG"
 echo "        NAME : $NAME"
 
 # DIR=$(cd `dirname $0` && pwd)
@@ -32,19 +29,6 @@ buildInDocker() {
 
 buildLocally() {
     scala-cli --power package App.scala -o app.jar --force --assembly
-}
-
-push() {
-    set +x
-    
-    echo "images:"
-    docker image ls
-
-    echo "pushing  $NAME:$TAG"
-    docker push $NAME:$TAG
-    
-    echo "pushing  $NAME:latest"
-    docker push $NAME:latest
 }
 
 run() {

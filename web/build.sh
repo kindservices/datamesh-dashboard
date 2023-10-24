@@ -10,11 +10,6 @@ buildDocker() {
     docker buildx build --platform linux/amd64,linux/arm64 --tag $IMG .
 }
 
-push() {
-    docker push $NAME:latest
-    docker push $NAME:$TAG
-}
-
 runLocal() {
     yarn
     yarn dev
