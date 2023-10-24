@@ -66,7 +66,7 @@
 .container {
   margin: 0;
   padding: 0;
-  background-color: red;
+  background-color: grey;
   display: flex;
   flex-direction: column;
   height: 100vh; /* 100% of the viewport height */
