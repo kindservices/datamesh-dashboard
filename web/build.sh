@@ -34,7 +34,7 @@ installArgo() {
 
     echo "creating $APP in branch $BRANCH"
 
-    kubectl create namespace data-mesh || echo "couldn't create data-mesh namespace"
+    kubectl create namespace data-mesh 2> /dev/null
 
     argocd app create $APP \
     --repo https://github.com/kindservices/datamesh-dashboard.git \
