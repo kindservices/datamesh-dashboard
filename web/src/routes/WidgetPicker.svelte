@@ -101,8 +101,6 @@
       fetchWidgets();
   }
 
-
-
   function addComponent() {
       var widget = widgetById.get(selectedWidget);
       goldenLayout.addComponent('NewComponent', {'selectedWidget' : selectedWidget}, widget.label);
@@ -114,9 +112,9 @@
     <select bind:value={selectedWidget} id="widget-picker" class="widget-picker">
       {#each widgets as widget (widget.id)}
         {#if (widget.isStale)}
-          <option class="stale" value={widget.id}>{widget.label} ({widget.id})</option>
+          <option disabled value={widget.id}><span class="stale">{widget.label} ({widget.secondsSinceLastHeartbeat}s since update)</span></option>
         {:else}
-          <option value={widget.id}>{widget.label} ({widget.id})</option>
+          <option value={widget.id}>{widget.label}</option>
         {/if}
       {/each}
     </select>
@@ -127,7 +125,9 @@
 
 <style>
 .stale {
-  color: grey
+  color: blue;
+  background-color:red
+  text
 }
 button {
     color: black

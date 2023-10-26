@@ -23,6 +23,16 @@ make buildDocker
 
 ## Debugging Locally
 
+For local development, you can run the full data-mesh stack (see [here](https://kindservices.github.io/idea-labs/data-mesh/running.html)).
+
+With those components running, you can choose to "port forward" the dashboard BFF component so that you host machine can access the backend server. (Use k9s, then shift+f when selecting the dashboard-bff component):
+
+![port-forward](k9s_portforward.png)
+
+You then just have to update [src/routes/api/settings.js](./src/routes/api/settings.js) to change the BFF url to localhost rather than the k9s server name (just uncomment the localhost and comment out the other one)
+
+You can then run the web server locally using `make runLocally`.
+
 ### Spinning up the BFF
 The backend-for-frontend is, by design, tightly coupled with the web service, and so lives in this repository.
 
