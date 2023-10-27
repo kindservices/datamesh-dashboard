@@ -34,6 +34,7 @@
 
   function dynamicLoad(jsUrl, cssUrl, container) {
     var script = document.createElement('script');
+    script.type = "module";
     script.src = jsUrl;
 
     var css = document.createElement('link');
