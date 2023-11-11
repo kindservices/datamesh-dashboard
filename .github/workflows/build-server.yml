@@ -52,8 +52,10 @@ jobs:
       with:
         context: ./server
         platforms: linux/amd64
-        push: false
-        tags: ${{ env.REGISTRY_IMAGE }}:build-${{github.run_number}}
+        push: true
+        tags: |
+          ${{ env.REGISTRY_IMAGE }}:latest-build
+          ${{ env.REGISTRY_IMAGE }}:build-${{github.run_number}}
     - name: Build if Main
       if: github.ref == 'refs/heads/main'
       uses: docker/build-push-action@v5
