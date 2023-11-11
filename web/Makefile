@@ -1,7 +1,7 @@
 run: buildDocker
 	source ./build.sh && run
-runLocal:
-	source ./build.sh && runLocal
+dev:
+	source ./build.sh && dev
 buildDocker: 
 	source ./build.sh && buildDocker
 push: buildDocker
