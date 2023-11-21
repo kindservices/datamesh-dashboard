@@ -1,9 +1,9 @@
 <script lang="ts">
-    let url = "http://127.0.0.1:5173/api/health"
-    let body = "{}"
+    let url = "http://kafka-rest-proxy.default.svc.cluster.local:8082/topic/user-tracking-data"
+    let body = `{ "records" : [ { "key" : "k", "value" : "v" } ] }`
 
     let message = ''
-
+    
     interface KeyValuePair {
       key: string;
       value: string;
@@ -17,9 +17,9 @@
     }
 
     let responseFuture
-    let headers : KeyValuePair[] = []
+    let headers : KeyValuePair[] = [{ key: 'Content-Type', value : 'application/vnd.kafka.json.v2+json' }]
 
-    let selectedMethod = 'GET'
+    let selectedMethod = 'POST'
 
     const methods = ['GET', 'POST', 'PUT', 'DELETE']
 
@@ -51,12 +51,14 @@
 			method: 'POST',
 			body: JSON.stringify(requestBody),
 			headers: { 'content-type': 'application/json' }})
-        .then(response => {
+        .then(async response => {
             if (!response.ok) {
                 message = `HTTP error with status: ${response.status}`
                 return message
             } else {
-                return response.text()
+                const content = await response.text()
+                console.log(`Got response ${content}`, response)
+                return content
             }
         })
         .catch(error => {

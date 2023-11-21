@@ -1,6 +1,16 @@
 import { type RequestHandler } from '@sveltejs/kit'
 import { json, text } from '@sveltejs/kit'
 
+const debugResponse = async (url, response) => {
+
+  console.log(`request returning ${response.status} from ${url}`, response)
+  console.error(`response bodyUsed?: ${response.bodyUsed}`)
+  const body = await response.text()
+  console.error(`>response>${body}<response<`)
+
+  return body
+}
+
 /**
  * The POST body is expected to send:
  * 
@@ -19,25 +29,39 @@ export const POST: RequestHandler = async (event) => {
   console.log(`handling proxy request...`)
   console.time('proxyHandler')
 
-  const jsonBody = await event.request.text()
+  try {
+    const proxyMessage = await event.request.json()
+    var bodyContent = proxyMessage.body
+    try {
+      const parsedJason = JSON.parse(bodyContent)
+      bodyContent = parsedJason
+    } catch (e) {
+      console.log(`.....calling parse on >>${bodyContent}<< threw: ${e}`)
+    }
+    
+    const proxyRequest = {
+      method: proxyMessage.method ?? "POST",
+      body: proxyMessage.method == "GET" ? null : bodyContent,
+      headers: proxyMessage.headers
+    }
+  
+    console.log(`making proxy request to ${proxyMessage.proxy} with ${typeof(bodyContent)} body content ${bodyContent}`)
+    console.log(`>>>${JSON.stringify(proxyRequest, null, 2)}<<<`)
+  
+    const response = await fetch(proxyMessage.proxy, {
+      method: proxyMessage.method ?? "POST",
+      body: proxyMessage.method == "GET" ? null : JSON.stringify(bodyContent),
+      headers: proxyMessage.headers
+    })
 
-  console.log(`jason: ${jsonBody}`)
+    const body = await debugResponse(proxyMessage.proxy, response)
 
-  const jason = JSON.parse(jsonBody)
-
-
-  const proxyRequest = {
-    method: jason.method ?? "POST",
-    body: jason.method == "GET" ? null : jason.body,
-    headers: jason.headers,
+    return {
+      body: body,
+      status: response.status,
+      headers: response.headers
+    }
+  } finally {
+    console.timeEnd('proxyHandler')
   }
-
-  console.log(`making proxy request to ${jason.proxy}: ${JSON.stringify(proxyRequest, null, 2)}`)
-
-  const response = await fetch(jason.proxy, proxyRequest);
-
-  console.timeEnd('proxyHandler')
-  console.log(`returning ${response.status} from ${jason.proxy}`)
-
-  return response
 }
