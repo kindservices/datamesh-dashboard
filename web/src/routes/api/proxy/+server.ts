@@ -11,6 +11,14 @@ const debugResponse = async (url, response) => {
   return body
 }
 
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 /**
  * The POST body is expected to send:
  * 
@@ -26,8 +34,9 @@ const debugResponse = async (url, response) => {
  */
 export const POST: RequestHandler = async (event) => {
 
+  const requestId = generateUUID()
   console.log(`handling proxy request...`)
-  console.time('proxyHandler')
+  console.time(requestId)
 
   try {
     const proxyMessage = await event.request.json()
@@ -56,12 +65,15 @@ export const POST: RequestHandler = async (event) => {
 
     const body = await debugResponse(proxyMessage.proxy, response)
 
-    return {
-      body: body,
-      status: response.status,
-      headers: response.headers
-    }
+    return new Response (
+      body,
+      {
+        status: response.status,
+        statusText: response.statusText,
+        headers: new Headers(response.headers),
+      }
+    )
   } finally {
-    console.timeEnd('proxyHandler')
+    console.timeEnd(requestId)
   }
 }

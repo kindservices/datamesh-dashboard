@@ -48,9 +48,9 @@
         console.log(`sending ${JSON.stringify(requestBody)}`)
         
         responseFuture = fetch(`/api/proxy`, {
-			method: 'POST',
-			body: JSON.stringify(requestBody),
-			headers: { 'content-type': 'application/json' }})
+          method: 'POST',
+          body: JSON.stringify(requestBody),
+          headers: { 'content-type': 'application/json' }})
         .then(async response => {
             if (!response.ok) {
                 message = `HTTP error with status: ${response.status}`
