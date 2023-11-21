@@ -79,7 +79,6 @@
       this.resizeWithContainerAutomatically = true;
       fetchComponent(id).then((markup) => {
          console.log(`async result: ${markup}`);
-        //  dynamicLoad(url(`/api/component/${id}/bundle.js`), url(`/api/component/${id}/bundle.css`), document.head);
          dynamicLoad(url(`/api/component/${id}/bundle.js`), url(`/api/component/${id}/bundle.css`), this.rootElement);
 
           webComponentContainer.innerHTML = markup;
